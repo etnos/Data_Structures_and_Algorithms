@@ -35,7 +35,7 @@ public class LCS3 {
                     if (a[i - 1] == b[j - 1] && a[i - 1] == c[k - 1]) {
                         cell1 = matrix[i - 1][j - 1][k - 1];
                         matrix[i][j][k] = 1 + cell1;
-                    } else if (a[i - 1] != b[j - 1] || a[i - 1] != c[k - 1] || b[j - 1] != c[k - 1]) {
+                    } else {
                         cell1 = matrix[i - 1][j][k];
                         cell2 = matrix[i][j - 1][k];
                         cell3 = matrix[i][j][k - 1];

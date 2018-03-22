@@ -3,6 +3,10 @@ package assignment1;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 class Bracket {
@@ -33,6 +37,7 @@ class check_brackets {
 
         System.out.println(processBrackets(text));
 //        test();
+//        generatedTest();
     }
 
     private static String processBrackets(String text) {
@@ -80,10 +85,32 @@ class check_brackets {
     }
 
     private static void testCase(String text, String resultExpected) {
+        testCase(text, resultExpected, "");
+    }
+
+    private static void testCase(String text, String resultExpected, String fileName) {
         String resultLocal = processBrackets(text);
         if (!resultLocal.equals(resultExpected)) {
-            System.out.println("WRONG " + resultLocal + " text: " + text);
+            System.out.println("WRONG " + resultLocal + " file: " + fileName + " text: " + text);
             System.exit(0);
+        }
+    }
+
+    private static void generatedTest() {
+        try {
+            String name;
+            for (int i = 1; i <= 54; i++) {
+                if (i < 10) {
+                    name = "0" + String.valueOf(i);
+                } else {
+                    name = String.valueOf(i);
+                }
+                String data = new String(Files.readAllBytes(Paths.get("src/assignment1/brackets/tests/" + name)));
+                String result = new String(Files.readAllBytes(Paths.get("src/assignment1/brackets/tests/" + name + ".a")));
+                testCase(data, result.trim(), name);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

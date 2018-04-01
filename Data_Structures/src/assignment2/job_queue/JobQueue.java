@@ -38,7 +38,6 @@ public class JobQueue {
     }
 
     private void assignJobs() {
-        // TODO: replace this code with a faster algorithm.
         assignedWorker = new int[jobs.length];
         startTime = new long[jobs.length];
         minPriQueue = new PriorityQueue<>(numWorkers);
@@ -55,24 +54,6 @@ public class JobQueue {
         }
     }
 
-    //
-//    private Worker getWorker() {
-//        Worker worker = minPriQueue.poll();
-//        if (!minPriQueue.isEmpty() && minPriQueue.peek().currentFinishTime == worker.currentFinishTime) {
-//            LinkedList<Worker> list = new LinkedList<>();
-//            list.add(worker);
-//            while (minPriQueue.peek().currentFinishTime == worker.currentFinishTime) {
-//                list.add(minPriQueue.poll());
-//            }
-//            Collections.sort(list);
-//            worker = list.getFirst();
-//            for (int i = 1; i < list.size(); i++) {
-//                minPriQueue.add(list.get(i));
-//            }
-//        }
-//
-//        return worker;
-//    }
 
     public void solve() throws IOException {
         in = new FastScanner();
@@ -187,6 +168,12 @@ public class JobQueue {
             this.index = index;
         }
 
+        /**
+         * Sort based on the finishTime and index
+         *
+         * @param w
+         * @return
+         */
         @Override
         public int compareTo(Worker w) {
             if (currentFinishTime < w.currentFinishTime) {

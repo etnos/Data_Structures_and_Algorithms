@@ -1,3 +1,5 @@
+package temp;
+
 public class CoinsChange {
 
     public static void main(String[] args) {

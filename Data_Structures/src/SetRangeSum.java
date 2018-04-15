@@ -1,4 +1,7 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class SetRangeSum {
@@ -99,8 +102,10 @@ public class SetRangeSum {
     class VertexPair {
         Vertex left;
         Vertex right;
+
         VertexPair() {
         }
+
         VertexPair(Vertex left, Vertex right) {
             this.left = left;
             this.right = right;
@@ -188,13 +193,25 @@ public class SetRangeSum {
 
     void erase(int x) {
         // Implement erase yourself
+        VertexPair result = find(root, x);
+        if (result.left == null || result.left.key != x) {
+            return;
+        }
+
+        root = splay(root);
+        root = merge(root.left, root.right);
+
+        if (root != null) {
+            root.parent = null;
+        }
 
     }
 
     boolean find(int x) {
         // Implement find yourself
+        VertexPair result = find(root, x);
 
-        return false;
+        return result.left != null && result.left.key == x;
     }
 
     long sum(int from, int to) {
@@ -206,7 +223,13 @@ public class SetRangeSum {
         Vertex right = middleRight.right;
         long ans = 0;
         // Complete the implementation of sum
-
+        if (middle == null) {
+            ans = 0;
+            root = merge(left, right);
+        } else {
+            ans = middle.sum;
+            root = merge(merge(left, middle), right);
+        }
         return ans;
     }
 
@@ -219,38 +242,50 @@ public class SetRangeSum {
         for (int i = 0; i < n; i++) {
             char type = nextChar();
             switch (type) {
-                case '+' : {
+                case '+': {
                     int x = nextInt();
                     insert((x + last_sum_result) % MODULO);
-                } break;
-                case '-' : {
+                }
+                break;
+                case '-': {
                     int x = nextInt();
                     erase((x + last_sum_result) % MODULO);
-                } break;
-                case '?' : {
+                }
+                break;
+                case '?': {
                     int x = nextInt();
                     out.println(find((x + last_sum_result) % MODULO) ? "Found" : "Not found");
-                } break;
-                case 's' : {
+                }
+                break;
+                case 's': {
                     int l = nextInt();
                     int r = nextInt();
                     long res = sum((l + last_sum_result) % MODULO, (r + last_sum_result) % MODULO);
                     out.println(res);
-                    last_sum_result = (int)(res % MODULO);
+                    last_sum_result = (int) (res % MODULO);
                 }
             }
         }
     }
 
-    SetRangeSum() throws IOException {
-        br = new BufferedReader(new InputStreamReader(System.in));
-        out = new PrintWriter(System.out);
-        solve();
-        out.close();
+//    SetRangeSum() throws IOException {
+//        br = new BufferedReader(new InputStreamReader(System.in));
+////        br = new BufferedReader(new InputStreamReader(new FileInputStream("src/assignment4/set_range_sums/tests/01")));
+//        out = new PrintWriter(System.out);
+//        solve();
+//        out.close();
+//    }
+
+    SetRangeSum(BufferedReader bufferedReader, PrintWriter printWriter) throws IOException {
+        br = bufferedReader;
+//        br = new BufferedReader(new InputStreamReader(new FileInputStream("src/assignment4/set_range_sums/tests/01")));
+        out = printWriter;
     }
 
     public static void main(String[] args) throws IOException {
-        new SetRangeSum();
+//        new SetRangeSum();
+
+        autoTest();
     }
 
     String nextToken() {
@@ -268,7 +303,49 @@ public class SetRangeSum {
     int nextInt() throws IOException {
         return Integer.parseInt(nextToken());
     }
+
     char nextChar() throws IOException {
         return nextToken().charAt(0);
+    }
+
+
+    private static void autoTest() {
+        try {
+//            testCase("src/assignment4/set_range_sums/tests/01", "src/assignment4/set_range_sums/tests/01.a", "01");
+//            testCase("src/assignment4/set_range_sums/tests/04", "src/assignment4/set_range_sums/tests/04.a", "04");
+//            testCase("src/assignment4/set_range_sums/tests/05", "src/assignment4/set_range_sums/tests/05.a", "05");
+            testCase("src/assignment4/set_range_sums/tests/20", "src/assignment4/set_range_sums/tests/20.a", "20");
+//            testCase("src/assignment4/set_range_sums/tests/36", "src/assignment4/set_range_sums/tests/36.a", "36");
+//            testCase("src/assignment4/set_range_sums/tests/83", "src/assignment4/set_range_sums/tests/83.a", "83");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void testCase(String data, String expectedResult, String fileName) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(data)));
+        String tempResultFile = "src/assignment4/set_range_sums/tempResult.txt";
+        File file = new File(tempResultFile);
+        file.getParentFile().mkdirs();
+        PrintWriter printWriter = new PrintWriter(file);
+
+        SetRangeSum setRangeSum = new SetRangeSum(bufferedReader, printWriter);
+        setRangeSum.solve();
+        printWriter.close();
+
+        if (!isEqual(expectedResult, tempResultFile)) {
+            System.out.println("WRONG " + fileName);
+        }
+    }
+
+    private static boolean isEqual(String file1, String file2) throws IOException {
+
+        String dataFile1 = new String(Files.readAllBytes(Paths.get(file1)));
+        String dataFile2 = new String(Files.readAllBytes(Paths.get(file2)));
+
+        dataFile1 = dataFile1.replaceAll("[^\\p{L}\\p{Z}]", "");
+        dataFile2 = dataFile2.replaceAll("[^\\p{L}\\p{Z}]", "");
+
+        return dataFile1.equals(dataFile2);
     }
 }

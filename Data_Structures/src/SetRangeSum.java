@@ -193,25 +193,20 @@ public class SetRangeSum {
 
     void erase(int x) {
         // Implement erase yourself
-        VertexPair result = find(root, x);
-        if (result.left == null || result.left.key != x) {
-            return;
-        }
-
-        root = splay(root);
-        root = merge(root.left, root.right);
-
-        if (root != null) {
-            root.parent = null;
-        }
-
+        VertexPair pairLeft = split(root, x);
+        VertexPair pairRight = split(pairLeft.right, x + 1);
+        root = merge(pairLeft.left, pairRight.right);
+        splay(root);
     }
 
     boolean find(int x) {
         // Implement find yourself
-        VertexPair result = find(root, x);
-
-        return result.left != null && result.left.key == x;
+        if (root != null) {
+            VertexPair n = find(root, x);
+            root = splay(n.right);
+            return root.key == x;
+        }
+        return false;
     }
 
     long sum(int from, int to) {
@@ -270,7 +265,6 @@ public class SetRangeSum {
 
 //    SetRangeSum() throws IOException {
 //        br = new BufferedReader(new InputStreamReader(System.in));
-////        br = new BufferedReader(new InputStreamReader(new FileInputStream("src/assignment4/set_range_sums/tests/01")));
 //        out = new PrintWriter(System.out);
 //        solve();
 //        out.close();
@@ -278,7 +272,6 @@ public class SetRangeSum {
 
     SetRangeSum(BufferedReader bufferedReader, PrintWriter printWriter) throws IOException {
         br = bufferedReader;
-//        br = new BufferedReader(new InputStreamReader(new FileInputStream("src/assignment4/set_range_sums/tests/01")));
         out = printWriter;
     }
 
@@ -311,12 +304,12 @@ public class SetRangeSum {
 
     private static void autoTest() {
         try {
-//            testCase("src/assignment4/set_range_sums/tests/01", "src/assignment4/set_range_sums/tests/01.a", "01");
-//            testCase("src/assignment4/set_range_sums/tests/04", "src/assignment4/set_range_sums/tests/04.a", "04");
-//            testCase("src/assignment4/set_range_sums/tests/05", "src/assignment4/set_range_sums/tests/05.a", "05");
+            testCase("src/assignment4/set_range_sums/tests/01", "src/assignment4/set_range_sums/tests/01.a", "01");
+            testCase("src/assignment4/set_range_sums/tests/04", "src/assignment4/set_range_sums/tests/04.a", "04");
+            testCase("src/assignment4/set_range_sums/tests/05", "src/assignment4/set_range_sums/tests/05.a", "05");
             testCase("src/assignment4/set_range_sums/tests/20", "src/assignment4/set_range_sums/tests/20.a", "20");
-//            testCase("src/assignment4/set_range_sums/tests/36", "src/assignment4/set_range_sums/tests/36.a", "36");
-//            testCase("src/assignment4/set_range_sums/tests/83", "src/assignment4/set_range_sums/tests/83.a", "83");
+            testCase("src/assignment4/set_range_sums/tests/36", "src/assignment4/set_range_sums/tests/36.a", "36");
+            testCase("src/assignment4/set_range_sums/tests/83", "src/assignment4/set_range_sums/tests/83.a", "83");
         } catch (IOException e) {
             e.printStackTrace();
         }

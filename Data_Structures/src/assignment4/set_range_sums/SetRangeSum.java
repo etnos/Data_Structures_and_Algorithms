@@ -1,6 +1,7 @@
+package assignment4.set_range_sums;
+
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -263,22 +264,22 @@ public class SetRangeSum {
         }
     }
 
-//    SetRangeSum() throws IOException {
-//        br = new BufferedReader(new InputStreamReader(System.in));
-//        out = new PrintWriter(System.out);
-//        solve();
-//        out.close();
-//    }
-
-    SetRangeSum(BufferedReader bufferedReader, PrintWriter printWriter) throws IOException {
-        br = bufferedReader;
-        out = printWriter;
+    SetRangeSum() throws IOException {
+        br = new BufferedReader(new InputStreamReader(System.in));
+        out = new PrintWriter(System.out);
+        solve();
+        out.close();
     }
 
-    public static void main(String[] args) throws IOException {
-//        new SetRangeSum();
+//    assignment4.set_range_sums.SetRangeSum(BufferedReader bufferedReader, PrintWriter printWriter) throws IOException {
+//        br = bufferedReader;
+//        out = printWriter;
+//    }
 
-        autoTest();
+    public static void main(String[] args) throws IOException {
+        new SetRangeSum();
+
+//        autoTest();
     }
 
     String nextToken() {
@@ -322,8 +323,8 @@ public class SetRangeSum {
         file.getParentFile().mkdirs();
         PrintWriter printWriter = new PrintWriter(file);
 
-        SetRangeSum setRangeSum = new SetRangeSum(bufferedReader, printWriter);
-        setRangeSum.solve();
+//        assignment4.set_range_sums.SetRangeSum setRangeSum = new assignment4.set_range_sums.SetRangeSum(bufferedReader, printWriter);
+//        setRangeSum.solve();
         printWriter.close();
 
         if (!isEqual(expectedResult, tempResultFile)) {

@@ -1,3 +1,5 @@
+package assignment4;
+
 import java.io.*;
 import java.util.*;
 
@@ -133,8 +135,8 @@ public class RopeProblem {
         // bigger key (next value in the order).
         // If the key is bigger than all keys in the tree,
         // then result is null.
-        VertexPair find(Vertex root, int targetKey) {
-            if (root.sum < targetKey) return null;
+        VertexPair find(Vertex root, int key) {
+            if (root.sum < key) return null;
             Vertex v = root;
             Vertex last = root;
             Vertex next = null;
@@ -146,13 +148,12 @@ public class RopeProblem {
                 if (v.left != null) {
                     leftSum = v.left.sum;
                 }
-
-                if (targetKey == leftSum + 1) {
+                if (key == leftSum + 1) {
                     next = v;
                     break;
-                } else if (targetKey > leftSum) {
+                } else if (key > leftSum) {
                     v = v.right;
-                    targetKey = targetKey - leftSum + 1;
+                    key -= leftSum + 1;
                 } else {
                     v = v.left;
                 }
@@ -165,8 +166,10 @@ public class RopeProblem {
             if (root == null) return new VertexPair();
             VertexPair result = new VertexPair();
             VertexPair findAndRoot = find(root, key);
-            root = findAndRoot.right;
-            result.right = findAndRoot.left;
+            if (findAndRoot != null) {
+                root = findAndRoot.right;
+                result.right = findAndRoot.left;
+            }
             if (result.right == null) {
                 result.left = root;
                 return result;
@@ -266,9 +269,10 @@ public class RopeProblem {
     }
 
     public static void main(String[] args) throws IOException {
-//        new RopeProblem().run();
-//        new RopeProblem().test();
-        new RopeProblem().test2();
+        new RopeProblem().run();
+//        new assignment4.RopeProblem().test();
+//        new assignment4.RopeProblem().test2();
+//        new assignment4.RopeProblem().autoTest();
     }
 
     public void run() throws IOException {
@@ -276,8 +280,8 @@ public class RopeProblem {
         PrintWriter out = new PrintWriter(System.out);
         Rope rope = new Rope(in.next());
         for (int q = in.nextInt(); q > 0; q--) {
-            int i = in.nextInt();
-            int j = in.nextInt();
+            int i = in.nextInt() + 1;
+            int j = in.nextInt() + 1;
             int k = in.nextInt();
             rope.process(i, j, k);
         }
@@ -294,7 +298,7 @@ public class RopeProblem {
 
         Rope rope = new Rope(s);
         for (int r = 0; r < q; r++) {
-            rope.process(i[r], j[r], k[r]);
+            rope.process(i[r] + 1, j[r] + 1, k[r]);
         }
 
         System.out.println("old s = " + s + " new s = " + rope.result());
@@ -307,7 +311,7 @@ public class RopeProblem {
 
         rope = new Rope(s);
         for (int r = 0; r < q; r++) {
-            rope.process(i[r], j[r], k[r]);
+            rope.process(i[r] + 1, j[r] + 1, k[r]);
         }
 
         System.out.println("old s = " + s + " new s = " + rope.result());
@@ -316,11 +320,72 @@ public class RopeProblem {
     private void test2() {
         String s = "12345";
 
-
         RopeProblem.Rope rope = new RopeProblem.Rope(s);
         rope.process(1, 2, 3);
 
         System.out.println(rope.result());
         System.out.println("End");
+    }
+
+    private void autoTest() {
+        Random generator = new Random();
+        int actionsAmount = 1000;
+        int counter = 0;
+        while (true) {
+            int strLength = 100000;
+            String str = randomString(strLength);
+            String str2 = str;
+
+            strLength = str.length();
+
+            if (strLength <= 0) {
+                System.out.println();
+            }
+
+            int q = generator.nextInt(actionsAmount);
+            int[] i = new int[q];
+            int[] j = new int[q];
+            int[] k = new int[q];
+
+            for (int t = 0; t < q; t++) {
+                i[t] = generator.nextInt(strLength);
+                j[t] = generator.nextInt(strLength);
+                j[t] = Math.max(i[t], j[t]);
+                int kBound = strLength - (j[t] - i[t]);
+                k[t] = generator.nextInt(kBound);
+                if (i[t] < 0 || j[t] < 0 || k[t] < 0) {
+                    System.out.println("check");
+                }
+            }
+
+            Rope rope = new Rope(str);
+            for (int r = 0; r < i.length; r++) {
+                rope.process(i[r] + 1, j[r] + 1, k[r]);
+            }
+
+
+            for (int r = 0; r < i.length; r++) {
+                str2 = rope.processNaive(str2, i[r], j[r], k[r]);
+            }
+
+            String result = rope.result();
+            if (!result.equals(str2)) {
+                System.out.println("Wrong");
+                break;
+            } else {
+                System.out.println(++counter);
+            }
+        }
+    }
+
+    private String randomString(int length) {
+        Random generator = new Random();
+        StringBuilder randomStringBuilder = new StringBuilder();
+        char tempChar;
+        for (int i = 0; i < length; i++) {
+            tempChar = (char) (generator.nextInt(96) + 32);
+            randomStringBuilder.append(tempChar);
+        }
+        return randomStringBuilder.toString();
     }
 }

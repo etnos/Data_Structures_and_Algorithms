@@ -1,33 +1,42 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+package assignment1;
+
+import java.util.*;
 
 public class Reachability {
     private static int reach(HashSet<Integer>[] adj, int x, int y) {
         //write your code here
-
         if (adj == null || adj.length == 0) {
             return 0;
         }
 
+        HashSet<Integer> visited = new HashSet<>();
+        LinkedList<Integer> queue = new LinkedList<>();
+        queue.push(x);
+        visited.add(x);
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
 
-        HashSet<Integer> edges = adj[x];
+            HashSet<Integer> currentVertexEdges = adj[current];
+            if (currentVertexEdges.contains(y)) {
+                return 1;
+            } else {
+                for (int e : currentVertexEdges) {
+                    if (!visited.contains(e)) {
+                        queue.push(e);
+                        visited.add(e);
+                    }
+                }
 
-        // check maybe there is direct connection
-        // in HashSet.contain -> O(1)
-        if (edges.contains(y)) {
-            return 1;
+            }
         }
-
 
         return 0;
     }
 
 
     public static void main(String[] args) {
-//        mainStarter();
-        test();
+        mainStarter();
+//        test();
     }
 
     private static void mainStarter() {
@@ -63,6 +72,26 @@ public class Reachability {
         int[][] edges = new int[][]{{1, 2}, {3, 2}, {4, 3}, {1, 4}};
 
         int x, y;
+        for (int i = 0; i < m; i++) {
+            x = edges[i][0];
+            y = edges[i][1];
+            adj[x - 1].add(y - 1);
+            adj[y - 1].add(x - 1);
+        }
+
+        x = 1 - 1;
+        y = 4 - 1;
+
+        System.out.println(reach(adj, x, y));
+
+
+        System.out.println("-----------------------");
+        n = 4;
+        m = 2;
+
+        adj = getGraph(n);
+        edges = new int[][]{{1, 2}, {3, 2}};
+
         for (int i = 0; i < m; i++) {
             x = edges[i][0];
             y = edges[i][1];

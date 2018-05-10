@@ -3,61 +3,6 @@ package assignment2;
 import java.util.*;
 
 public class Acyclicity {
-//    private static int acyclic(ArrayList<Integer>[] adj) {
-//        //write your code here
-//
-//        LinkedList<Integer> stack = new LinkedList<>();
-//        LinkedList<Integer> result = new LinkedList<>();
-//        HashSet<Integer> visited = new HashSet<>();
-//        HashSet<Integer> deleted = new HashSet<>();
-//
-//        for (int i = 0; i < adj.length; i++) {
-//            if (!visited.contains(i)) {
-//                visited.add(i);
-//                stack.push(i);
-//                if (!linearOrder(adj, visited, stack, result, deleted)) {
-//                    return 1;
-//                }
-//            }
-//
-//        }
-//        return 0;
-//    }
-//
-//    private static boolean linearOrder(ArrayList<Integer>[] adj, HashSet<Integer> visited, LinkedList<Integer> stack, LinkedList<Integer> result, HashSet<Integer> deleted) {
-//        while (!stack.isEmpty()) {
-//            int current = stack.peek();
-//            ArrayList<Integer> currentEdges = adj[current];
-//
-//            if (currentEdges.isEmpty()) {
-//                result.push(current);
-//                deleted.add(current);
-//                stack.poll();
-//            } else {
-//                boolean isSink = true, isCycle = true;
-//                for (Integer edge : currentEdges) {
-//                    if (!deleted.contains(edge)) {
-//                        isSink = false;
-//
-//                        if (!visited.contains(edge)) {
-//                            isCycle = false;
-//                            stack.push(edge);
-//                            visited.add(edge);
-//                        }
-//                    }
-//                }
-//
-//                if (isSink) {
-//                    result.push(current);
-//                    deleted.add(current);
-//                    stack.poll();
-//                } else if (isCycle) {
-//                    return false;
-//                }
-//            }
-//        }
-//        return true;
-//    }
 
     private static int acyclic(ArrayList<Integer>[] adj) {
 

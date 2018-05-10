@@ -1,3 +1,5 @@
+package assignment2;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -10,13 +12,13 @@ public class Toposort {
         //write your code here
         for (int i = 0; i < adj.length; i++) {
             if (used[i] != 1) {
-                dfs(adj, used, order, 0, i);
+                dfs(adj, used, order, i);
             }
         }
         return order;
     }
 
-    private static void dfs(ArrayList<Integer>[] adj, int[] used, ArrayList<Integer> order, int s, int vertex) {
+    private static void dfs(ArrayList<Integer>[] adj, int[] used, ArrayList<Integer> order, int vertex) {
         //write your code here
 
         Stack<Integer> stack = new Stack<>();

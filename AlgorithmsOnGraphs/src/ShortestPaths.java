@@ -1,79 +1,58 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
-import java.util.Set;
 
 
 public class ShortestPaths {
 
 
+    /**
+     * Failed case #8/36: Wrong answer - Does not work
+     *
+     * @param adj
+     * @param cost
+     * @param s
+     * @param distance
+     * @param reachable
+     * @param shortest
+     */
     private static void shortestPaths(ArrayList<Integer>[] adj, ArrayList<Integer>[] cost,
                                       int s, long[] distance, int[] reachable, int[] shortest) {
-        int n = adj.length;
+        //write your code here
         distance[s] = 0;
+        reachable[s] = 1;
         Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < adj.length; i++) {
+            for (int u = 0; u < adj.length; u++) {
+                for (int v : adj[u]) {
+                    int v_index = adj[u].indexOf(v);
+                    if (distance[u] != Long.MAX_VALUE && distance[v] > distance[u] + cost[u].get(v_index)) {
+                        distance[v] = distance[u] + cost[u].get(v_index);
+                        reachable[v] = 1;
+                        if (i == adj.length - 1) {
+                            queue.add(v);
+                        }
+                    }
+                }
+            }
+        }
 
-        for (int i = 0; i < n; i++) {
-            for (int u = 0; u < n; u++)
-                relax(u, adj[u], cost[u], distance);
-        }
-        for (int u = 0; u < n; u++) {
-            relax(u, adj[u], cost[u], distance, queue);
-        }
-        Set<Integer> negativeCycle = bfs(queue, adj);
-
-        for (int v : queue) {
-            distance[v] = -1;
-        }
-        for (int v = 0; v < n; v++) {
-            if (distance[v] != Long.MAX_VALUE) {
-                reachable[v] = 1;
-                if (v == s) {
-                    shortest[v] = 1;
-                } else {
-                    shortest[v] = negativeCycle.contains(v) ? 0 : 1;
+        int[] visited = new int[adj.length];
+        while (!queue.isEmpty()) {
+            int u = queue.remove();
+            visited[u] = 1;
+            if (u != s)
+                shortest[u] = 0;
+            for (int v : adj[u]) {
+                if (visited[v] == 0) {
+                    queue.add(v);
+                    visited[v] = 1;
+                    shortest[v] = 0;
                 }
             }
         }
         distance[s] = 0;
-    }
-
-    private static void relax(int u, List<Integer> adjU, List<Integer> costU,
-                              long[] distance) {
-        relax(u, adjU, costU, distance, null);
-    }
-
-    private static void relax(int u, List<Integer> adjU, List<Integer> costU,
-                              long[] distance, Queue<Integer> queue) {
-        for (int i = 0; i < adjU.size(); i++) {
-            int v = adjU.get(i), c = costU.get(i);
-            if (distance[u] != Long.MAX_VALUE && distance[v] > distance[u] + c) {
-                distance[v] = distance[u] + c;
-                if (queue != null) {
-                    queue.offer(v);
-                }
-            }
-        }
-    }
-
-    private static Set<Integer> bfs(Queue<Integer> queue, List<Integer>[] adj) {
-        Set<Integer> tmp = new HashSet<>();
-        boolean[] visited = new boolean[adj.length];
-        while (!queue.isEmpty()) {
-            int u = queue.poll();
-            tmp.add(u);
-            visited[u] = true;
-            for (int v : adj[u]) {
-                if (!visited[v]) {
-                    queue.offer(v);
-                }
-            }
-        }
-        return tmp;
     }
 
     public static void main(String[] args) {
@@ -99,7 +78,7 @@ public class ShortestPaths {
         int reachable[] = new int[n];
         int shortest[] = new int[n];
         for (int i = 0; i < n; i++) {
-            distance[i] = Long.MAX_VALUE;  // BZ: default Single Source.
+            distance[i] = Long.MAX_VALUE;
             reachable[i] = 0;
             shortest[i] = 1;
         }

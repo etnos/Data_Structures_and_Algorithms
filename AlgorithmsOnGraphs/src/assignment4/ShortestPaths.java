@@ -1,61 +1,76 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+package assignment4;
+
+import java.util.*;
 
 
 public class ShortestPaths {
 
-
-    /**
-     * Failed case #8/36: Wrong answer - Does not work
-     *
-     * @param adj
-     * @param cost
-     * @param s
-     * @param distance
-     * @param reachable
-     * @param shortest
-     */
     private static void shortestPaths(ArrayList<Integer>[] adj, ArrayList<Integer>[] cost,
                                       int s, long[] distance, int[] reachable, int[] shortest) {
         //write your code here
         distance[s] = 0;
-        reachable[s] = 1;
-        Queue<Integer> queue = new LinkedList<>();
+        List<Integer> reachableVertex = dfs(adj, s);
+        for (Integer index : reachableVertex) {
+            reachable[index] = 1;
+        }
+        List<Integer> cycle = new ArrayList<>();
+
         for (int i = 0; i < adj.length; i++) {
-            for (int u = 0; u < adj.length; u++) {
-                for (int v : adj[u]) {
-                    int v_index = adj[u].indexOf(v);
-                    if (distance[u] != Long.MAX_VALUE && distance[v] > distance[u] + cost[u].get(v_index)) {
-                        distance[v] = distance[u] + cost[u].get(v_index);
-                        reachable[v] = 1;
+            for (int j = 0; j < reachableVertex.size(); j++) {
+                Integer currentVertex = reachableVertex.get(j);
+                List<Integer> neighbours = adj[currentVertex];
+                List<Integer> neighboursCosts = cost[currentVertex];
+                for (int k = 0; k < neighbours.size(); k++) {
+                    Integer currentNeighbour = neighbours.get(k);
+                    Integer currentCost = neighboursCosts.get(k);
+
+                    if (distance[currentNeighbour] > distance[currentVertex] + currentCost) {
+                        distance[currentNeighbour] = distance[currentVertex] + currentCost;
                         if (i == adj.length - 1) {
-                            queue.add(v);
+                            shortest[currentNeighbour] = 0;
+                            cycle.add(currentNeighbour);
                         }
                     }
                 }
             }
-        }
 
-        int[] visited = new int[adj.length];
+        }
+        Set<Integer> allNonReachable = new HashSet<>();
+        if(!cycle.isEmpty()) {
+            allNonReachable.addAll(dfs(adj, cycle.get(0)));
+            for (Integer index : allNonReachable) {
+                shortest[index] = 0;
+            }
+        }
+    }
+
+    public static List<Integer> dfs(ArrayList<Integer>[] adj, int s) {
+        List<Integer> result = new ArrayList<>();
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[adj.length];
+
+        queue.add(s);
         while (!queue.isEmpty()) {
-            int u = queue.remove();
-            visited[u] = 1;
-            if (u != s)
-                shortest[u] = 0;
-            for (int v : adj[u]) {
-                if (visited[v] == 0) {
-                    queue.add(v);
-                    visited[v] = 1;
-                    shortest[v] = 0;
+            Integer currentVertex = queue.poll();
+            if (!visited[currentVertex]) {
+                visited[currentVertex] = true;
+                result.add(currentVertex);
+                List<Integer> neighbours = adj[currentVertex];
+                for (Integer neighbour : neighbours) {
+                    queue.add(neighbour);
                 }
             }
         }
-        distance[s] = 0;
+
+        return result;
     }
 
     public static void main(String[] args) {
+        mainCoursera();
+//        test();
+    }
+
+    private static void mainCoursera() {
         Scanner scanner = new Scanner(System.in);
         int n = scanner.nextInt();
         int m = scanner.nextInt();
@@ -93,8 +108,6 @@ public class ShortestPaths {
             }
         }
         scanner.close();
-
-//        test();
     }
 
 

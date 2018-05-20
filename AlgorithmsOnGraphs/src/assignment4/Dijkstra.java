@@ -3,60 +3,6 @@ package assignment4;
 import java.util.*;
 
 public class Dijkstra {
-//    private static int distance(ArrayList<Integer>[] adj, ArrayList<Integer>[] cost, int s, int t) {
-//
-//        if (s == t) {
-//            return 0;
-//        }
-//
-//        int[] dist = new int[adj.length];
-//        int[] used = new int[adj.length];
-//
-//        for (int i = 0; i < dist.length; i++) {
-//            dist[i] = Integer.MAX_VALUE;
-//        }
-//
-//        dijkstra(adj, cost, s, t, dist, used);
-//        if (dist[t] == Integer.MAX_VALUE) {
-//            return -1;
-//        } else {
-//            return dist[t];
-//        }
-//    }
-//
-//
-////    assignment4.Dijkstra(G, S)
-////for all u ∈ V:
-////    dist[u] ← ∞, prev[u] ← nil
-////    dist[S] ← 0
-////    H ← MakeQueue(V) {dist-values as keys}
-////while H is not empty:
-////    u ← ExtractMin(H)
-////for all (u, v) ∈ E:
-////            if dist[v] > dist[u] + w(u, v):
-////    dist[v] ← dist[u] + w(u, v)
-////    prev [v] ← u
-////    ChangePriority(H, v, dist[v])
-//
-//
-//    private static void dijkstra(ArrayList<Integer>[] adj, ArrayList<Integer>[] cost, int s, int t, int[] dist, int[] used) {
-//        PriorityQueue<Integer> queue = new PriorityQueue<>(adj.length);
-//        queue.add(s);
-//        used[s] = 1;
-//        while (!queue.isEmpty()) {
-//            int u = queue.poll();
-//            used[u] = 1;
-//            ArrayList<Integer> edges = adj[u];
-//            ArrayList<Integer> edgesCosts = cost[u];
-//            for (int i = 0; i < edges.size(); i++) {
-//                int edge = edges.get(i);
-//                if (used[edge] != 1) {
-//                    relax(dist, edgesCosts.get(i), u, edge);
-//                    queue.add(edge);
-//                }
-//            }
-//        }
-//    }
 
     private static boolean relax(int[] dist, int cost, int u, int v) {
         if (dist[u] == Integer.MAX_VALUE) {

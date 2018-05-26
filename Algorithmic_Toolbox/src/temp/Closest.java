@@ -1,3 +1,5 @@
+package temp;
+
 import java.io.*;
 import java.util.*;
 
@@ -132,8 +134,8 @@ public class Closest {
     }
 
     public static void main(String[] args) throws Exception {
-        mainCoursera();
-//        test();
+//        mainCoursera();
+        test();
     }
 
     private static void mainCoursera() {

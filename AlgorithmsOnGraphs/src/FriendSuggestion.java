@@ -27,7 +27,7 @@ public class FriendSuggestion {
             visited = new boolean[n];
             Arrays.fill(visited, false);
             workset = new ArrayList<Integer>();
-            distance = new Long[][] {new Long[n], new Long[n]};
+            distance = new Long[][]{new Long[n], new Long[n]};
             for (int i = 0; i < n; ++i) {
                 distance[0][i] = distance[1][i] = INFINITY;
             }
@@ -58,23 +58,20 @@ public class FriendSuggestion {
             visit(0, s, 0L);
             visit(1, t, 0L);
             // Implement the rest of the algorithm yourself
- 
+
             return -1L;
         }
 
-        class Entry implements Comparable<Entry>
-        {
+        class Entry implements Comparable<Entry> {
             Long cost;
             int node;
-          
-            public Entry(Long cost, int node)
-            {
+
+            public Entry(Long cost, int node) {
                 this.cost = cost;
                 this.node = node;
             }
-         
-            public int compareTo(Entry other)
-            {
+
+            public int compareTo(Entry other) {
                 return cost < other.cost ? -1 : cost > other.cost ? 1 : 0;
             }
         }
@@ -90,11 +87,11 @@ public class FriendSuggestion {
         int n = in.nextInt();
         int m = in.nextInt();
         Impl bidij = new Impl(n);
-        bidij.adj = (ArrayList<Integer>[][])new ArrayList[2][];
-        bidij.cost = (ArrayList<Integer>[][])new ArrayList[2][];
+        bidij.adj = (ArrayList<Integer>[][]) new ArrayList[2][];
+        bidij.cost = (ArrayList<Integer>[][]) new ArrayList[2][];
         for (int side = 0; side < 2; ++side) {
-            bidij.adj[side] = (ArrayList<Integer>[])new ArrayList[n];
-            bidij.cost[side] = (ArrayList<Integer>[])new ArrayList[n];
+            bidij.adj[side] = (ArrayList<Integer>[]) new ArrayList[n];
+            bidij.cost[side] = (ArrayList<Integer>[]) new ArrayList[n];
             for (int i = 0; i < n; i++) {
                 bidij.adj[side][i] = new ArrayList<Integer>();
                 bidij.cost[side][i] = new ArrayList<Integer>();
@@ -118,11 +115,49 @@ public class FriendSuggestion {
             int u, v;
             u = in.nextInt();
             v = in.nextInt();
-            System.out.println(bidij.query(u-1, v-1));
+            System.out.println(bidij.query(u - 1, v - 1));
         }
     }
 
-    private static void test(){
+    private static void test() {
+        int n = 2;
+        int m = 1;
+
+        Impl bidij = new Impl(n);
+        bidij.adj = (ArrayList<Integer>[][]) new ArrayList[2][];
+        bidij.cost = (ArrayList<Integer>[][]) new ArrayList[2][];
+        for (int side = 0; side < 2; ++side) {
+            bidij.adj[side] = (ArrayList<Integer>[]) new ArrayList[n];
+            bidij.cost[side] = (ArrayList<Integer>[]) new ArrayList[n];
+            for (int i = 0; i < n; i++) {
+                bidij.adj[side][i] = new ArrayList<Integer>();
+                bidij.cost[side][i] = new ArrayList<Integer>();
+            }
+        }
+
+        int[][] data = new int[][]{{1, 2, 1}};
+
+        for (int i = 0; i < m; i++) {
+            int x, y, c;
+            x = data[i][0];
+            y = data[i][1];
+            c = data[i][2];
+            bidij.adj[0][x - 1].add(y - 1);
+            bidij.cost[0][x - 1].add(c);
+            bidij.adj[1][y - 1].add(x - 1);
+            bidij.cost[1][y - 1].add(c);
+        }
+
+        int t = 4;
+
+        int[][] distanceBetween = new int[][]{{1, 1}, {2, 2}, {1, 2}, {2, 1}};
+
+        for (int i = 0; i < t; i++) {
+            int u, v;
+            u = distanceBetween[i][0];
+            v = distanceBetween[i][1];
+            System.out.println(bidij.query(u - 1, v - 1));
+        }
 
     }
 }

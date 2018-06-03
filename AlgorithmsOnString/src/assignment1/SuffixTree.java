@@ -55,7 +55,8 @@ public class SuffixTree {
                     label = child.label;
                     k = j + 1;
 
-                    while (k - j < label.length() && text.charAt(k) == label.charAt(k - j)) {
+                    // TODO this one does not work, it is not correct
+                    while (k - j < label.length() && k < text.length()) {
                         k++;
                         if (k - j == label.length()) {
                             current = child;
@@ -64,7 +65,7 @@ public class SuffixTree {
                             char cExist = label.charAt(k - j);
                             char cNew = text.charAt(k);
                             Node mid = new Node(label.substring(0, k - j));
-                            mid.child.put(cNew, new Node(text.substring(k, text.length())));
+                            mid.child.put(cNew, new Node(text.substring(k)));
                             mid.child.put(cExist, child);
                             child.label = label.substring(k - j);
                             current.child.put(text.charAt(j), mid);
@@ -119,5 +120,11 @@ public class SuffixTree {
         text = "ACA$";
         root = computeSuffixTreeEdges(text);
         print(root);
+
+//        System.out.println();
+//
+//        text = "ATAAATG$";
+//        root = computeSuffixTreeEdges(text);
+//        print(root);
     }
 }

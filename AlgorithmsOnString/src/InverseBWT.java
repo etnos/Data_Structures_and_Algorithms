@@ -31,20 +31,21 @@ public class InverseBWT {
         Arrays.sort(lastColArray);
         int textLength = bwt.length();
 
+        // structure to keep characters total count number
         HashMap<Character, Integer> ordinals = initOrdinals();
 
+        // init last column with char and char index
         ColumnChar[] lastCol = initLastCoulmn(bwt, ordinals);
-
+        // just copy the last column and sort it.
+        // char index should stay the same
         ColumnChar[] firstCol = initFirstColumn(lastCol);
 
-        HashMap<Character, ArrayList<Integer>> lastColCharIndices = initColumnCharIndices(bwt, textLength);
-
-        HashMap<Character, ArrayList<Integer>> firstColCharIndices = initColumnCharIndices(bwt, textLength);
+        HashMap<Character, ArrayList<Integer>> charIndices = initColumnCharIndices(bwt, textLength);
 
         ColumnChar currentChar = new ColumnChar('$', 0);
         for (int i = 0; i < bwt.length(); i++) {
-            currentChar = firstCol[firstColCharIndices.get(currentChar.c).get(currentChar.ordinal)];
-            currentChar = lastCol[lastColCharIndices.get(currentChar.c).get(currentChar.ordinal)];
+            currentChar = firstCol[charIndices.get(currentChar.c).get(currentChar.ordinal)];
+            currentChar = lastCol[charIndices.get(currentChar.c).get(currentChar.ordinal)];
             result.append(currentChar.c);
         }
 
@@ -173,8 +174,8 @@ public class InverseBWT {
     }
 
     static public void main(String[] args) throws IOException {
-//        new InverseBWT().run();
-        new InverseBWT().test();
+        new InverseBWT().run();
+//        new InverseBWT().test();
     }
 
     public void run() throws IOException {

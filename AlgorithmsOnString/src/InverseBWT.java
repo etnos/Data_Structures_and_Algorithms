@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class InverseBWT {
@@ -27,12 +26,94 @@ public class InverseBWT {
     String inverseBWT(String bwt) {
         StringBuilder result = new StringBuilder();
         // write your code here
-        int length = bwt.length();
-        char[][] array = new char[length][2];
 
+        char[] lastColArray = bwt.toCharArray();
+        Arrays.sort(lastColArray);
+        int textLength = bwt.length();
+
+        HashMap<Character, Integer> ordinals = initOrdinals();
+
+        ColumnChar[] lastCol = initLastCoulmn(bwt, ordinals);
+
+        ColumnChar[] firstCol = initFirstColumn(lastCol);
+
+        HashMap<Character, ArrayList<Integer>> lastColCharIndices = initColumnCharIndices(bwt, textLength);
+
+        HashMap<Character, ArrayList<Integer>> firstColCharIndices = initColumnCharIndices(bwt, textLength);
+
+        ColumnChar currentChar = new ColumnChar('$', 0);
+        for (int i = 0; i < bwt.length(); i++) {
+            currentChar = firstCol[firstColCharIndices.get(currentChar.c).get(currentChar.ordinal)];
+            currentChar = lastCol[lastColCharIndices.get(currentChar.c).get(currentChar.ordinal)];
+            result.append(currentChar.c);
+        }
 
         return result.toString();
     }
+
+    private HashMap<Character, ArrayList<Integer>> initColumnCharIndices(String bwt, int textLength) {
+        HashMap<Character, ArrayList<Integer>> lastColCharIndices = new HashMap<>();
+        lastColCharIndices.put('A', new ArrayList<>());
+        lastColCharIndices.put('C', new ArrayList<>());
+        lastColCharIndices.put('T', new ArrayList<>());
+        lastColCharIndices.put('G', new ArrayList<>());
+        lastColCharIndices.put('$', new ArrayList<>());
+        for (int i = 0; i < textLength; i++) {
+            ArrayList<Integer> indices = lastColCharIndices.get(bwt.charAt(i));
+            indices.add(i);
+        }
+        return lastColCharIndices;
+    }
+
+    private ColumnChar[] initFirstColumn(ColumnChar[] lastCol) {
+        ColumnChar[] firstCol = Arrays.copyOf(lastCol, lastCol.length);
+        Arrays.sort(firstCol);
+        return firstCol;
+    }
+
+    private HashMap<Character, Integer> initOrdinals() {
+        HashMap<Character, Integer> ordinals = new HashMap<>();
+
+        ordinals.put('A', 0);
+        ordinals.put('C', 0);
+        ordinals.put('T', 0);
+        ordinals.put('G', 0);
+        ordinals.put('$', 0);
+
+        return ordinals;
+    }
+
+    private ColumnChar[] initLastCoulmn(String bwt, HashMap<Character, Integer> ordinals) {
+        int textLength = bwt.length();
+        ColumnChar[] lastCol = new ColumnChar[textLength];
+        for (int i = 0; i < textLength; i++) {
+            char nextChar = bwt.charAt(i);
+            lastCol[i] = new ColumnChar(nextChar, ordinals.get(nextChar));
+            ordinals.put(nextChar, ordinals.get(nextChar) + 1);
+        }
+
+        return lastCol;
+    }
+
+
+    private class ColumnChar implements Comparable<ColumnChar> {
+        char c;
+        int ordinal;
+
+        public ColumnChar(char c, int ordinal) {
+            this.c = c;
+            this.ordinal = ordinal;
+        }
+
+        @Override
+        public int compareTo(ColumnChar o) {
+            if (this.c == o.c)
+                return 0;
+            return this.c < o.c ? -1 : 1;
+        }
+
+    }
+
 
     String inverseBWTSlow(String bwt) {
         StringBuilder result = new StringBuilder();
@@ -92,8 +173,8 @@ public class InverseBWT {
     }
 
     static public void main(String[] args) throws IOException {
-        new InverseBWT().run();
-//        new InverseBWT().test();
+//        new InverseBWT().run();
+        new InverseBWT().test();
     }
 
     public void run() throws IOException {

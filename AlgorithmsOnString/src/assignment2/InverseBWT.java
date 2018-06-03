@@ -1,3 +1,5 @@
+package assignment2;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -175,7 +177,7 @@ public class InverseBWT {
 
     static public void main(String[] args) throws IOException {
         new InverseBWT().run();
-//        new InverseBWT().test();
+//        new assignment2.InverseBWT().test();
     }
 
     public void run() throws IOException {

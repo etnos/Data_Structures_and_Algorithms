@@ -1,29 +1,86 @@
+package assignment1;
+
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Arrays;
+import java.util.*;
 
 public class Evacuation {
     private static FastScanner in;
 
     public static void main(String[] args) throws IOException {
-//        in = new FastScanner();
-//
-//        FlowGraph graph = readGraph();
-//        System.out.println(maxFlow(graph, 0, graph.size() - 1));
+        in = new FastScanner();
 
-        test();
+        FlowGraph graph = readGraph();
+        System.out.println(maxFlow(graph, 0, graph.size() - 1));
+
+//        test();
     }
 
+    /**
+     * Edmonds-Karp algorithm
+     *
+     * @param graph
+     * @param from
+     * @param to
+     * @return
+     */
     private static int maxFlow(FlowGraph graph, int from, int to) {
         int flow = 0;
         /* your code goes here */
+        FlowPath flowPath = new FlowPath();
+        while (flowPath != null) {
+            while (!flowPath.edges.isEmpty()) {
+                Integer edgeNum = flowPath.edges.pop();
+                graph.addFlow(edgeNum, flowPath.flow);
+            }
+            flow = flow + flowPath.flow;
+            flowPath = getPath(graph);
+        }
         return flow;
     }
 
-    private static void edmondsKarp(){
+    private static FlowPath getPath(FlowGraph flowGraph) {
+        FlowPath flowPath = new FlowPath();
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+        int s = flowGraph.size() - 1;
+        Integer[] prevEdge = new Integer[s + 1];
+        priorityQueue.add(0);
+        while (!priorityQueue.isEmpty()) {
+            for (int edgeNum : flowGraph.graph[priorityQueue.poll()]) {
+                Edge e = flowGraph.getEdge(edgeNum);
+                int cap = e.capacity - e.flow;
+                int to = e.to;
+                if (prevEdge[to] == null && cap > 0) {
+                    priorityQueue.add(to);
+                    prevEdge[to] = edgeNum;
+                    if (to == s) {
+                        int backTrack = to;
+                        flowPath.flow = Integer.MAX_VALUE;
+                        do {
+                            Integer peNum = prevEdge[backTrack];
+                            Edge pe = flowGraph.getEdge(peNum);
+                            int availFlow = pe.capacity - pe.flow;
+                            if (availFlow < flowPath.flow)
+                                flowPath.flow = availFlow;
+                            flowPath.edges.add(peNum);
+                            backTrack = pe.from;
+                        } while (backTrack > 0);
+                        return flowPath;
+                    }
+                }
+            }
 
+        }
+
+        return null;
+    }
+
+    static class FlowPath {
+        Stack<Integer> edges;
+        int flow = 0;
+
+        public FlowPath() {
+            edges = new Stack<>();
+        }
     }
 
     static FlowGraph readGraph() throws IOException {
@@ -135,9 +192,23 @@ public class Evacuation {
         return graph;
     }
 
+    static FlowGraph readTestGraph1() throws IOException {
+        int vertex_count = 4;
+        int edge_count = 5;
+        FlowGraph graph = new FlowGraph(vertex_count);
+
+        int[][] data = new int[][]{{1, 2, 10000}, {1, 3, 10000}, {2, 3, 1}, {3, 4, 10000}, {2, 4, 10000}};
+        for (int i = 0; i < edge_count; ++i) {
+            int from = data[i][0] - 1, to = data[i][1] - 1, capacity = data[i][2];
+            graph.addEdge(from, to, capacity);
+        }
+        return graph;
+    }
 
     private static void test() throws IOException {
         FlowGraph graph = readTestGraph();
+        System.out.println(maxFlow(graph, 0, graph.size() - 1));
+        graph = readTestGraph1();
         System.out.println(maxFlow(graph, 0, graph.size() - 1));
     }
 }

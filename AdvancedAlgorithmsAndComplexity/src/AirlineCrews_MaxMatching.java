@@ -105,13 +105,6 @@ public class AirlineCrews_MaxMatching {
             }
         }
 
-//        boolean[] busyRight = new boolean[numRight];
-//        for (int i = 0; i < numLeft; ++i)
-//            for (int j = 0; j < numRight; ++j)
-//                if (bipartiteGraph[i][j] && matching[i] == -1 && !busyRight[j]) {
-//                    matching[i] = j;
-//                    busyRight[j] = true;
-//                }
         return matching;
     }
 
@@ -179,8 +172,6 @@ public class AirlineCrews_MaxMatching {
         return null;
     }
 
-    // [tk] turn the stack into an arraylist? Or array since there are
-    // only 3 possible steps?
     static class FlowPath {
         Stack<Integer> edges;
         int flow = 0;
@@ -191,7 +182,7 @@ public class AirlineCrews_MaxMatching {
     }
 
     /* This class implements a bit unusual scheme to store the graph edges, in order
-     * to retrieve the backward edge for a given edge quickly. */
+     * to re.trieve the backward edge for a given edge quickly */
     static class FlowGraph {
         /* List of all - forward and backward - edges */
         private List<Edge> edges;

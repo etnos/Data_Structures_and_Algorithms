@@ -1,3 +1,5 @@
+package assignment1;
+
 import java.io.*;
 import java.util.*;
 
@@ -6,8 +8,8 @@ public class AirlineCrews_MaxMatching {
     private PrintWriter out;
 
     public static void main(String[] args) throws IOException {
-//        new AirlineCrews_MaxMatching().solve();
-        new AirlineCrews_MaxMatching().test();
+        new AirlineCrews_MaxMatching().solve();
+//        new assignment1.AirlineCrews_MaxMatching().test();
     }
 
     private void test() throws IOException {
@@ -72,32 +74,32 @@ public class AirlineCrews_MaxMatching {
         int[] matching = new int[numLeft];
         Arrays.fill(matching, -1);
 
-        FlowGraph fg = new FlowGraph(numRight + numLeft + 2);
+        FlowGraph flowGraph = new FlowGraph(numRight + numLeft + 2);
 
         for (int i = 0; i < numLeft; i++) {
-            fg.addEdge(0, i + 1, 1);
+            flowGraph.addEdge(0, i + 1, 1);
             for (int j = 0; j < numRight; j++) {
                 if (bipartiteGraph[i][j]) {
-                    fg.addEdge(i + 1, numLeft + j + 1, 1);
+                    flowGraph.addEdge(i + 1, numLeft + j + 1, 1);
                 }
             }
         }
 
         for (int i = 0; i < numRight; i++) {
-            fg.addEdge(numLeft + i + 1, fg.size() - 1, 1);
+            flowGraph.addEdge(numLeft + i + 1, flowGraph.size() - 1, 1);
         }
 
         FlowPath fp = new FlowPath();
         while (fp != null) {
             while (!fp.edges.isEmpty()) {
                 Integer edgeNum = fp.edges.pop();
-                fg.addFlow(edgeNum, fp.flow);
+                flowGraph.addFlow(edgeNum, fp.flow);
             }
-            fp = getPath(fg);
+            fp = getPath(flowGraph);
         }
         for (int i = 0; i < numLeft; i++) {
-            for (int edgeNum : fg.graph[i + 1]) {
-                Edge e = fg.edges.get(edgeNum);
+            for (int edgeNum : flowGraph.graph[i + 1]) {
+                Edge e = flowGraph.edges.get(edgeNum);
                 if (e.flow > 0) {
                     matching[i] = e.to - (numLeft + 1);
                     break;
@@ -137,32 +139,32 @@ public class AirlineCrews_MaxMatching {
 
 
     private static FlowPath getPath(FlowGraph gr) {
-        FlowPath fp = new FlowPath();
-        PriorityQueue<Integer> q = new PriorityQueue<>();
+        FlowPath flowPath = new FlowPath();
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
         int s = gr.size() - 1;
         Integer[] prevEdge = new Integer[s + 1];
-        q.add(0);
-        while (!q.isEmpty()) {
-            for (int edgeNum : gr.graph[q.poll()]) {
+        priorityQueue.add(0);
+        while (!priorityQueue.isEmpty()) {
+            for (int edgeNum : gr.graph[priorityQueue.poll()]) {
                 Edge e = gr.getEdge(edgeNum);
                 int cap = e.capacity - e.flow;
                 int to = e.to;
                 if (prevEdge[to] == null && cap > 0) {
-                    q.add(to);
+                    priorityQueue.add(to);
                     prevEdge[to] = edgeNum;
                     if (to == s) {
                         int backTrack = to;
-                        fp.flow = Integer.MAX_VALUE;
+                        flowPath.flow = Integer.MAX_VALUE;
                         do {
                             Integer peNum = prevEdge[backTrack];
                             Edge pe = gr.getEdge(peNum);
                             int availFlow = pe.capacity - pe.flow;
-                            if (availFlow < fp.flow)
-                                fp.flow = availFlow;
-                            fp.edges.add(peNum);
+                            if (availFlow < flowPath.flow)
+                                flowPath.flow = availFlow;
+                            flowPath.edges.add(peNum);
                             backTrack = pe.from;
                         } while (backTrack > 0);
-                        return fp;
+                        return flowPath;
                     }
                 }
             }

@@ -38,15 +38,15 @@ class EnergyValues {
         return new Equation(a, b);
     }
 
-    static PositionDiet SelectPivotElement(double a[][], boolean used_raws[], boolean used_columns[]) {
+    static Position SelectPivotElement(double a[][], boolean used_raws[], boolean used_columns[]) {
         // This algorithm selects the first free element.
         // You'll need to improve it to pass the problem.
-        PositionDiet pivot_element = new PositionDiet(0, 0);
+        Position pivot_element = new Position(0, 0);
         while (used_raws[pivot_element.raw])
             ++pivot_element.raw;
         while (used_columns[pivot_element.column])
             ++pivot_element.column;
-        PositionDiet firstFree = pivot_element;
+        Position firstFree = pivot_element;
         while (a[pivot_element.raw][pivot_element.column] == 0) {
             ++pivot_element.raw;
             if (pivot_element.raw >= a.length) {
@@ -58,7 +58,7 @@ class EnergyValues {
         return pivot_element;
     }
 
-    static void SwapLines(double a[][], double b[], boolean used_raws[], PositionDiet pivot_element) {
+    static void SwapLines(double a[][], double b[], boolean used_raws[], Position pivot_element) {
         int size = a.length;
 
         for (int column = 0; column < size; ++column) {
@@ -78,7 +78,7 @@ class EnergyValues {
         pivot_element.raw = pivot_element.column;
     }
 
-    static void ProcessPivotElement(double a[][], double b[], PositionDiet pivot_element) {
+    static void ProcessPivotElement(double a[][], double b[], Position pivot_element) {
         // Write your code here
         int size = a.length;
         Double currentCell = a[pivot_element.raw][pivot_element.column];
@@ -97,7 +97,7 @@ class EnergyValues {
         }
     }
 
-    static void MarkPivotElementUsed(PositionDiet pivot_element, boolean used_raws[], boolean used_columns[]) {
+    static void MarkPivotElementUsed(Position pivot_element, boolean used_raws[], boolean used_columns[]) {
         used_raws[pivot_element.raw] = true;
         used_columns[pivot_element.column] = true;
     }
@@ -110,7 +110,7 @@ class EnergyValues {
         boolean[] used_columns = new boolean[size];
         boolean[] used_raws = new boolean[size];
         for (int step = 0; step < size; ++step) {
-            PositionDiet pivot_element = SelectPivotElement(a, used_raws, used_columns);
+            Position pivot_element = SelectPivotElement(a, used_raws, used_columns);
             SwapLines(a, b, used_raws, pivot_element);
             ProcessPivotElement(a, b, pivot_element);
             MarkPivotElementUsed(pivot_element, used_raws, used_columns);

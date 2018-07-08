@@ -1,6 +1,9 @@
+package temp;
+
 import java.io.*;
 import java.util.*;
 
+// It works but not all tests are past
 public class CircuitDesign {
     private final InputReader reader;
     private final OutputWriter writer;

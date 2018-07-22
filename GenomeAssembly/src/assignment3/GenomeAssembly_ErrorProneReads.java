@@ -1,4 +1,4 @@
-package assignment1;//Program to Assemble Phi-X174 genome from Error-Prone reads.
+package assignment3;
 
 import java.util.*;
 import java.io.*;
